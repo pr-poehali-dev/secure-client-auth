@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useBank } from '../context/BankContext';
 import Icon from '@/components/ui/icon';
+import { useToast } from '../hooks/use-toast';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Главная', icon: 'LayoutDashboard' },
@@ -19,8 +20,14 @@ const NAV_ITEMS = [
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { state, navigate, logout } = useBank();
+  const { state, navigate, logout, loading, refreshData } = useBank();
+  const { toast } = useToast();
   const [collapsed, setCollapsed] = useState(false);
+
+  const handleRefresh = async () => {
+    await refreshData();
+    toast({ title: '🔄 Данные обновлены', description: 'Синхронизация с сервером выполнена' });
+  };
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#F5F7FA' }}>
@@ -108,9 +115,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <span className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>{state.currentUser?.position}</span>
               </div>
             </div>
+            <button onClick={handleRefresh} className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-white" style={{ background: 'rgba(255,255,255,0.15)' }}>
+              <Icon name={loading ? 'Loader2' : 'RefreshCw'} size={14} className={loading ? 'animate-spin' : ''} />
+              {!loading && <span className="hidden md:inline">Обновить</span>}
+            </button>
             <div className="text-xs text-white opacity-60">{new Date().toLocaleDateString('ru-RU')}</div>
           </div>
         </header>
+
+        {loading && (
+          <div className="w-full h-0.5" style={{ background: '#E8F5EC' }}>
+            <div className="h-0.5 animate-pulse" style={{ background: '#21A038', width: '60%' }} />
+          </div>
+        )}
 
         {/* Content */}
         <main className="flex-1 overflow-auto p-6 animate-fade-in">

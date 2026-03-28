@@ -39,13 +39,13 @@ export default function Queue() {
   const serving = state.queue.filter(q => q.status === 'serving');
   const done = state.queue.filter(q => q.status === 'done').slice(0, 10);
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     const op = OPERATIONS.find(o => o.id === selectedOp);
     if (!op) return;
     const number = genTicketNumber();
     const code = genCode();
-    const ticket = addQueueTicket({
+    const ticket = await addQueueTicket({
       number, code,
       clientName: clientName || undefined,
       clientPhone: clientPhone || undefined,
@@ -58,23 +58,23 @@ export default function Queue() {
     setShowAdd(false); setClientName(''); setClientPhone(''); setSelectedOp('');
   };
 
-  const takeNext = () => {
+  const takeNext = async () => {
     if (waiting.length === 0) { toast({ title: 'Очередь пуста', description: 'Нет клиентов в ожидании' }); return; }
     const next = waiting[0];
-    updateQueueTicket(next.id, { status: 'serving' });
+    await updateQueueTicket(next.id, { status: 'serving' });
     setCurrentTicket({ ...next, status: 'serving' });
     setShowOpChoice(true);
   };
 
-  const completeTicket = (ticket: QueueTicket) => {
-    updateQueueTicket(ticket.id, { status: 'done', servedAt: new Date().toISOString() });
+  const completeTicket = async (ticket: QueueTicket) => {
+    await updateQueueTicket(ticket.id, { status: 'done', servedAt: new Date().toISOString() });
     setCurrentTicket(null);
     setShowOpChoice(false);
     toast({ title: '✅ Клиент обслужен', description: `Талон ${ticket.number} закрыт` });
   };
 
-  const cancelTicket = (ticket: QueueTicket) => {
-    updateQueueTicket(ticket.id, { status: 'cancelled' });
+  const cancelTicket = async (ticket: QueueTicket) => {
+    await updateQueueTicket(ticket.id, { status: 'cancelled' });
     setCurrentTicket(null);
     setShowOpChoice(false);
   };

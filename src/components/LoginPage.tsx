@@ -17,15 +17,15 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600));
-
-    const ok = login(identifier, password);
-    if (!ok) {
+    // Проверяем учётные данные через API
+    const valid = await login(identifier, password);
+    if (!valid) {
       toast({ title: 'Ошибка входа', description: 'Неверный идентификатор или пароль', variant: 'destructive' });
       setLoading(false);
       return;
     }
 
+    // Вход прошёл — запрашиваем SMS 2FA
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     setSentCode(code);
     console.log('[2FA SMS] Код:', code);
@@ -38,7 +38,8 @@ export default function LoginPage() {
     e.preventDefault();
     if (smsCode === sentCode || smsCode === '000000') {
       toast({ title: '✅ Вход выполнен', description: 'Добро пожаловать в АС ЕФС СБОЛ.про' });
-      login(identifier, password);
+      // Сессия уже восстановлена — просто перезагружаем страницу для корректного старта
+      window.location.reload();
     } else {
       toast({ title: 'Неверный код', description: 'Проверьте SMS и введите код повторно', variant: 'destructive' });
     }

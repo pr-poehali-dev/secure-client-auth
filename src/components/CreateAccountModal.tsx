@@ -17,10 +17,10 @@ export default function CreateAccountModal({ clientId, clientName, onCreated, on
   const [type, setType] = useState<Account['type']>('checking');
   const [currency, setCurrency] = useState('RUB');
 
-  const handle = (e: React.FormEvent) => {
+  const handle = async (e: React.FormEvent) => {
     e.preventDefault();
     const number = '40817810' + Math.floor(10000000000000 + Math.random() * 89999999999999).toString().slice(0, 12);
-    const acc = addAccount({ clientId, number, type, currency, balance: 0, isActive: true });
+    const acc = await addAccount({ clientId, number, type, currency, balance: 0, isActive: true });
     toast({ title: '✅ Счёт открыт', description: `Счёт ${number.slice(-6)} создан для ${clientName}` });
     onCreated(acc);
   };

@@ -48,7 +48,7 @@ export default function Credits() {
     setShowSms(true);
   };
 
-  const onSmsConfirm = () => {
+  const onSmsConfirm = async () => {
     setShowSms(false);
     if (!pendingCredit || !foundClient || !state.currentUser) return;
     const amt = parseFloat(pendingCredit.amount);
@@ -59,7 +59,7 @@ export default function Credits() {
     const end = new Date(start);
     end.setMonth(end.getMonth() + term);
 
-    addCredit({
+    await addCredit({
       clientId: foundClient.id, clientName: foundClient.name,
       accountId: foundAccount,
       amount: amt, rate, term, monthlyPayment: monthly,
@@ -69,7 +69,7 @@ export default function Credits() {
       remainingAmount: amt,
     });
 
-    addTransaction({
+    await addTransaction({
       type: 'credit_issue', amount: amt, currency: 'RUB',
       toAccount: foundAccount,
       clientId: foundClient.id, clientName: foundClient.name,

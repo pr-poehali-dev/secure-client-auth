@@ -45,11 +45,11 @@ export default function Cashin() {
 
   const onSmsConfirm = () => { setShowSms(false); setShowCountModal(true); };
 
-  const onCountConfirm = () => {
+  const onCountConfirm = async () => {
     if (!pendingTx || !state.currentUser) return;
     setShowCountModal(false);
     const client = state.clients.find(c => c.id === pendingTx.account.clientId);
-    const tx = addTransaction({
+    const tx = await addTransaction({
       type: 'cashin',
       amount: pendingTx.amt,
       currency: pendingTx.account.currency,

@@ -57,11 +57,11 @@ export default function Cashout() {
     setShowCountModal(true);
   };
 
-  const onCountConfirm = () => {
+  const onCountConfirm = async () => {
     if (!pendingTx || !state.currentUser) return;
     setShowCountModal(false);
     const client = state.clients.find(c => c.id === pendingTx.account.clientId);
-    const tx = addTransaction({
+    const tx = await addTransaction({
       type: 'cashout',
       amount: pendingTx.amt,
       currency: pendingTx.account.currency,

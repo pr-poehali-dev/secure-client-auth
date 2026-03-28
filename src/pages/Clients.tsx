@@ -26,19 +26,18 @@ export default function Clients() {
 
   const clientAccounts = selected ? state.accounts.filter(a => a.clientId === selected.id) : [];
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    const client = addClient(form);
+    await addClient(form);
     toast({ title: '✅ Клиент добавлен', description: form.fullName });
     setShowAdd(false);
     setForm({ fullName: '', phone: '', passport: '', email: '', address: '', birthDate: '' });
-    void client;
   };
 
-  const handleEdit = (e: React.FormEvent) => {
+  const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selected) return;
-    updateClient(selected.id, editForm);
+    await updateClient(selected.id, editForm);
     toast({ title: '✅ Данные обновлены' });
     setEditMode(false);
     setSelected({ ...selected, ...editForm });

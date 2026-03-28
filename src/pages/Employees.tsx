@@ -20,17 +20,17 @@ export default function Employees() {
   const [form, setForm] = useState({ identifier: '', password: '', name: '', role: 'employee' as UserRole, position: '', branch: '', phone: '', email: '' });
   const [editForm, setEditForm] = useState<Partial<typeof form>>({});
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    addEmployee(form);
+    await addEmployee(form);
     toast({ title: '✅ Сотрудник добавлен', description: form.name });
     setShowAdd(false);
     setForm({ identifier: '', password: '', name: '', role: 'employee', position: '', branch: '', phone: '', email: '' });
   };
 
-  const handleEdit = (e: React.FormEvent, empId: string) => {
+  const handleEdit = async (e: React.FormEvent, empId: string) => {
     e.preventDefault();
-    updateEmployee(empId, editForm);
+    await updateEmployee(empId, editForm);
     toast({ title: '✅ Данные обновлены' });
     setSelected(null);
   };

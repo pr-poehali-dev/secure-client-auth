@@ -46,11 +46,11 @@ export default function Transfer() {
     setShowSms(true);
   };
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     setShowSms(false);
     if (!pendingData || !state.currentUser) return;
     const clientFrom = state.clients.find(c => c.id === pendingData.from.clientId);
-    const tx = addTransaction({
+    await addTransaction({
       type: 'transfer',
       amount: pendingData.amt,
       currency: 'RUB',
@@ -72,7 +72,6 @@ export default function Transfer() {
       clientName: clientFrom?.fullName || '—',
       employeeName: state.currentUser.name,
     });
-    void tx;
   };
 
   const clientFrom = fromAcc ? state.clients.find(c => c.id === fromAcc.clientId) : null;

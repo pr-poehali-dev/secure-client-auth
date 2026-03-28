@@ -9,9 +9,9 @@ export default function Terminals() {
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState({ name: '', ipAddress: '', port: '8080', type: 'Платёжный', branch: '' });
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    addTerminal({ ...form, port: parseInt(form.port), status: 'offline', lastPing: new Date().toISOString() });
+    await addTerminal({ ...form, port: parseInt(form.port), status: 'offline', lastPing: new Date().toISOString() });
     toast({ title: '✅ Терминал добавлен', description: `${form.name} (${form.ipAddress})` });
     setShowAdd(false);
     setForm({ name: '', ipAddress: '', port: '8080', type: 'Платёжный', branch: '' });
@@ -19,9 +19,9 @@ export default function Terminals() {
 
   const ping = (id: string, ip: string) => {
     toast({ title: '🔄 Пинг отправлен', description: `Проверяю ${ip}...` });
-    setTimeout(() => {
+    setTimeout(async () => {
       const ok = Math.random() > 0.3;
-      updateTerminal(id, { status: ok ? 'online' : 'error', lastPing: new Date().toISOString() });
+      await updateTerminal(id, { status: ok ? 'online' : 'error', lastPing: new Date().toISOString() });
       toast({ title: ok ? '✅ Терминал доступен' : '❌ Терминал недоступен', description: ip });
     }, 1500);
   };
@@ -78,7 +78,7 @@ export default function Terminals() {
               <button onClick={() => ping(t.id, t.ipAddress)} className="sber-btn-secondary flex-1 py-2 text-sm flex items-center justify-center gap-1">
                 <Icon name="Activity" size={14} />Пинг
               </button>
-              <button onClick={() => updateTerminal(t.id, { status: t.status === 'online' ? 'offline' : 'online' })}
+              <button onClick={async () => await updateTerminal(t.id, { status: t.status === 'online' ? 'offline' : 'online' })}
                 className="px-3 py-2 rounded-lg text-xs"
                 style={{ background: t.status === 'online' ? '#FEE2E2' : '#E8F5EC', color: t.status === 'online' ? '#DC2626' : '#21A038' }}>
                 {t.status === 'online' ? 'Откл.' : 'Вкл.'}

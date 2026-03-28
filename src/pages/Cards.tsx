@@ -34,11 +34,11 @@ export default function Cards() {
     setShowSms(true);
   };
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     setShowSms(false);
     if (!pendingCard || !foundClient || !state.currentUser) return;
     const acc = state.accounts.find(a => a.clientId === foundClient.id);
-    addCard({
+    await addCard({
       clientId: foundClient.id,
       accountId: acc?.id || '',
       cardNumber: pendingCard.cardNumber || `4276 **** **** ${Math.floor(1000 + Math.random() * 9000)}`,
@@ -47,7 +47,7 @@ export default function Cards() {
       type: pendingCard.type,
       status: 'active',
     });
-    addTransaction({
+    await addTransaction({
       type: 'card_issue', amount: 0, currency: 'RUB',
       clientId: foundClient.id, clientName: foundClient.name,
       employeeId: state.currentUser.id, employeeName: state.currentUser.name,

@@ -1,0 +1,55 @@
+{
+  "tests": [
+    {
+      "name": "GET employees list",
+      "method": "GET",
+      "path": "/?endpoint=employees",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Auth login valid",
+      "method": "POST",
+      "path": "/?endpoint=auth/login",
+      "body": {"identifier": "varikabank", "password": "ural"},
+      "expectedStatus": 200,
+      "expectedBody": {"employee": {"name": "Вадим Иванов"}},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET clients",
+      "method": "GET",
+      "path": "/?endpoint=clients",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET accounts",
+      "method": "GET",
+      "path": "/?endpoint=accounts",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET transactions",
+      "method": "GET",
+      "path": "/?endpoint=transactions",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET queue",
+      "method": "GET",
+      "path": "/?endpoint=queue",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET terminals",
+      "method": "GET",
+      "path": "/?endpoint=terminals",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}
